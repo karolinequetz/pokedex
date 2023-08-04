@@ -8,6 +8,7 @@ import { PokeList, Pokemon } from '../model/pokemon';
   styleUrls: ['./poke-list.component.scss'],
 })
 export class PokeListComponent implements OnInit {
+  private setAllPokemons: Pokemon[] = [];
   public getAllPokemons: Pokemon[] = [];
 
   constructor(private pokeApiService: PokeApiService) {}
@@ -15,9 +16,17 @@ export class PokeListComponent implements OnInit {
   ngOnInit(): void {
     this.pokeApiService.apiListAllPokemons.subscribe({
       next: (res) => {
-        this.getAllPokemons = res.results;
+        this.setAllPokemons = res.results;
+        this.getAllPokemons = this.setAllPokemons;
         console.log(this.getAllPokemons);
       },
     });
+  }
+
+  public getSearch(value: string) {
+    const filter = this.setAllPokemons.filter((res) => {
+      return !res.name.indexOf(value.toLowerCase());
+    });
+    this.getAllPokemons = filter;
   }
 }
